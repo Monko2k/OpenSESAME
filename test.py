@@ -17,7 +17,8 @@ from util.visualizer import Visualizer
 from util import html
 
 import numpy as np
-from skimage.measure import compare_ssim
+from skimage.metrics import structural_similarity
+
 from skimage.color import rgb2gray
 
 def main():
@@ -90,7 +91,7 @@ def main():
             gt_img = data_i['image'].float()[0].numpy().transpose(1,2,0)
             pred_img = rgb2gray(pred_img)
             gt_img = rgb2gray(gt_img)
-            ssim_pic = compare_ssim(gt_img,pred_img, multichannel=False, full=True)[1]
+            ssim_pic = structural_similarity(gt_img,pred_img, multichannel=False, full=True)[1]
 
             mask = data_i['mask_in'][0]
             ssim.append(np.ma.masked_where(1 - mask.cpu().numpy().squeeze(), ssim_pic).mean())
